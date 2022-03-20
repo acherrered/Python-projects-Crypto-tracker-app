@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="title">{% block title %} Students {% endblock %}</h1>
+    <div class="content">
+        {% for currency in currency %}
+            <div class="student">
+                <p><b>#{{ currency.id }}</b></p>
+                <b>
+                    <p class="name">{{ currency.idcurrency }}</p>
+                </b>
+                <p>{{ currency.price }} $</p>
+                <p>{{ currency.quantity }}</p>
+                <p>Joined: {{ currency.created_at }}</p>
+                <p>Joined: {{ getprice(currency.idcurrency) }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
