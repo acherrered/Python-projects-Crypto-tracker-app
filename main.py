@@ -8,7 +8,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 #https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
 
-app = Flask(__name__)
+#
+app = Flask(__name__, static_url_path='/static')
+
 app.config['SQLALCHEMY_DATABASE_URI'] =\
         'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
