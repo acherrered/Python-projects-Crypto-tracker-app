@@ -61,7 +61,7 @@ min-height: 50px;
 
 .symbol{
 
-font-size: 15px;
+font-size: 18px;
 font-weight: bold;
 color: rgb(239, 239, 239);
   
@@ -74,6 +74,15 @@ font-weight: bold;
 color: rgb(239, 239, 239);  
 margin-top: 50px;
 
+}
+
+.logo-text {
+
+font-size: 20px;
+font-weight: bold;
+color: rgb(239, 239, 239); 
+
+  
 }
 
 .variation-icon{

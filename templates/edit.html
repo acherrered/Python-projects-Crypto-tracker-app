@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 style="width: 100%">{% block title %} Add a New Student {% endblock %}</h1>
+    <h1 style="width: 100%">
+        {% block title %} Edit {{ currency.idcurrency }}
+                               {{ currency.idcurrency }}'s Details
+        {% endblock %}
+    </h1>
     <form method="post">
 
       <p>
@@ -15,7 +19,7 @@
       </p>      
         <p>
             <label for="price">Price</label>
-            <input type="number" name="price" step="16777217" placeholder="">
+            <input type="number" name="price" step="16777217"  placeholder="">
             </input>
         </p>
 
