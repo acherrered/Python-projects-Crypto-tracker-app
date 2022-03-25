@@ -18,6 +18,47 @@ color: rgb(31, 195, 108);
 }
 
 
+        .title {
+            margin: 5px;
+        }
+
+        .content {
+            margin: 5px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .student {
+            flex: 20%;
+            padding: 10px;
+            margin: 5px;
+            background-color: #f3f3f3;
+            inline-size: 100%;
+        }
+
+        .bio {
+            padding: 10px;
+            margin: 5px;
+            background-color: #ffffff;
+            color: #004835;
+        }
+
+        .name a {
+            color: gb(239, 239, 239);
+            text-decoration: none;
+        }
+
+        nav a {
+            color: gb(239, 239, 239);
+            font-size: 20px;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+
+
+   
 
 .transaction{
 background: none;
@@ -103,3 +144,4 @@ font-size: 10px;
 font-weight: 10;
 color: rgb(239, 239, 239);
 }
+

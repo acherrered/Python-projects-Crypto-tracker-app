@@ -3,6 +3,9 @@ from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from pycoingecko import CoinGeckoAPI
+from apscheduler.schedulers.background import BackgroundScheduler
+import datetime as dt
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -33,13 +36,32 @@ class Currency(db.Model):
     def __repr__(self):
         return f'<Currency {self.idcurrency}>'
 
+class Graph(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    totalvalue = db.Column(db.Float)
+    #totaldate = db.Column(db.Float)
+    created_at = db.Column(db.DateTime(timezone=True),
+                           server_default=func.now())
+   
+    def __repr__(self):
+        return f'<Graph {self.totalvalue}>'
+      
 #Creating the Database via the model
-  #>>> export FLASK_APP=main
-  #>>> flask shell
+  #export FLASK_APP=main
+  #flask shell
   #>>> from main import db, Currency
   #>>> db.create_all()
-
+  #>>> Currency.query.all()
+  # print(01coin.id)
 # ...
+def sensor():
+    """ Function for test purposes. """
+    print("Scheduler is alive!")
+
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(sensor,'interval',seconds=1000)
+sched.start()
+
 
 #get % value of variation between two values
 def Valuevariation(first, second):
@@ -105,23 +127,35 @@ def Total():
    return str(round(total, 2))
 
 #print('test number : ', (float(0.001)))
-  
+
+#def test():
+#  graph = Graph.query.all()
+#  for graph in graph:
+#     ygraph =  print (' Graph data : ', graph.totalvalue, graph.created_at)
+#  return ygraph
+   
+
 @app.route('/')
 def index():
      #table()
-     float()
+   #  float()
      #print(int(float("0.001")))
+     #byID = cg.get_coin_by_id("bitcoin")
+     #print('byID : ', byID)
+     #test()
      currency = Currency.query.all()
      return render_template('index.html', currency=currency, getprice=Getprice, getname=Getname, geticon=Geticon, iconvariation=Iconvariation, valuevariation=Valuevariation, getsymbol=Getsymbol, total=Total)
  
 # ...
 
-def float():
-   currency = Currency.query.all()
-   for currency in currency:
-      price = print ('print : ', currency.price)
+#def float():
+  # currency = Currency.query.all()
+  # for currency in currency:
+   #   if currency.price > 0:
+    #      print(' check : ',currency.price)
+    #      price = print ('print : ', currency.price)
 
-   return price
+  # return price
 
 
 
@@ -156,14 +190,17 @@ def table():
 
 #print('test', cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids='bitcoin'))
 
-item = db.session.query(Currency).filter(Currency.idcurrency=="bitcoin").first()
-print ('item : ', item.id)
+#item = db.session.query(Currency).filter(Currency.idcurrency=="bitcoin").first()
+#print ('item : ', item.id)
           
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
-  coinlist = cg.get_coins_list()
-  #print(coinlist)
-  if request.method == 'POST':
+   coinlist = cg.get_coins_list()
+   #print(coinlist)
+   #Data = request.args.get('xdataid')
+   #print('data : ', Data)
+   #request.form.get('xdataid')
+   if request.method == 'POST':
         idcurrency = request.form['idcurrency']
         price = (request.form['price'])
         quantity = (request.form['quantity'])
@@ -174,7 +211,8 @@ def create():
         db.session.commit()
                     
         return redirect(url_for('index'))
-  return render_template('create.html', **locals(), coinlist=coinlist)
+     
+   return render_template('create.html', **locals())
 
 
 # ...
@@ -221,15 +259,19 @@ def delete(currency_id):
     return redirect(url_for('index'))
 
 
-@app.post('/<currency_idcurrency>/delete_page/')
-def delete_page(currency_idcurrency):
-    item = db.session.query(Currency).filter(Currency.idcurrency==currency_idcurrency).first()
-    currency = Currency.query.get_or_404(item.id)
-    db.session.delete(currency)
-    db.session.commit()
+@app.route('/delete_page/', methods=('GET','POST'))
+def delete_page():
+    xcurrency_idcurrency = request.form.get('currency_idcurrency')
+    print ('url id : ', xcurrency_idcurrency)
+    currency = Currency.query.all()
+    if request.method == 'POST':
+         item = db.session.query(Currency).filter(Currency.idcurrency==xcurrency_idcurrency).first()
+         del_currency = Currency.query.get_or_404(item.id)
+         db.session.delete(del_currency)
+         db.session.commit()
   
-    return redirect(url_for('index'))
+    #return redirect(url_for('index'))
   
-    return render_template('delete_page.html', xcurrency=Currency)
+    return render_template('delete_page.html', currency=currency)
 
 app.run(host='0.0.0.0', port=8080)

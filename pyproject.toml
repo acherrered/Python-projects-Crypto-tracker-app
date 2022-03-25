@@ -11,6 +11,7 @@ Flask-SQLAlchemy = "^2.5.1"
 SQLAlchemy = "^1.4.32"
 pycoingecko = "^2.2.0"
 app = "^0.0.1"
+APScheduler = "^3.9.1"
 
 [tool.poetry.dev-dependencies]
 
