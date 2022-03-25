@@ -8,7 +8,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 #https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
 
-app = Flask(__name__)
+#
+app = Flask(__name__, static_url_path='/static')
+
 app.config['SQLALCHEMY_DATABASE_URI'] =\
         'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -64,7 +66,7 @@ def Iconvariation(argument):
   
    return icon_url
 
-#get real time price by id
+#get real price by id
 def Getprice(id):
   cgprice =  cg.get_price(ids=id, vs_currencies='eur')[id]['eur']
   print(cgprice)
@@ -82,13 +84,19 @@ def Geticon(id):
   print('cgicon : ', cgicon)
   return cgicon
 
+#get symbol by id
+def Getsymbol(id):
+  cgsymbol =  cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids=id)[0]['symbol']
+  print('cgsymbol : ', cgsymbol)
+  return cgsymbol
+
 
   
 @app.route('/')
 def index():
      table()
      currency = Currency.query.all()
-     return render_template('index.html', currency=currency, getprice=Getprice, getname=Getname, geticon=Geticon, iconvariation=Iconvariation, valuevariation=Valuevariation)
+     return render_template('index.html', currency=currency, getprice=Getprice, getname=Getname, geticon=Geticon, iconvariation=Iconvariation, valuevariation=Valuevariation, getsymbol=Getsymbol)
  
 # ...
 
@@ -109,18 +117,20 @@ def table():
      print('balance : ', balance)
      total += balance
      print(total)
-     variation = pct_change(price, transaction.price)
+     variation = Valuevariation(price, transaction.price)
      print('change', variation)
-     variation_icon_url = Variation(variation)
+     variation_icon_url = Iconvariation(variation)
      print(variation_icon_url)
      Getname(transaction.idcurrency)
      Geticon(transaction.idcurrency)
+     Getsymbol(transaction.idcurrency)
      return render_template('create.html', **locals())
     #print(f"<id={transaction.id}, username={transaction.idcurrency}>")
 
 
-print('test', pct_change(100, 110))
-      
+print('test', cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids='bitcoin'))
+
+          
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
   coinlist = cg.get_coins_list()

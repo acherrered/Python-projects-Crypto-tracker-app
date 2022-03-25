@@ -1,0 +1,43 @@
+body{
+
+  padding: 0 15px 0 15px;
+  
+}
+
+
+.transaction{
+background: lightgray;
+
+}
+
+.currency {
+font-size: 80%;
+font-weight: bold;
+display: inline-block;
+text-align: center;
+}
+
+.currency-icon{
+width: 50px;
+height: 50px;
+  
+}
+
+.symbol{
+
+font-size: 20px;
+font-weight: bold;
+  
+}
+
+
+.variation-icon{
+width: 60px;
+height: 22px;
+}
+
+    .navbar-nav {
+        position: absolute;
+        right: 10px;
+    }
+}
