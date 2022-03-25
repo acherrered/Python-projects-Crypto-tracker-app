@@ -54,15 +54,15 @@ def Valuevariation(first, second):
 #Get icon variation by % value (up/upup/dw/dwdw)
 def Iconvariation(argument):
    if argument>=0 and argument<1:
-    icon_url = "icon1"
+    icon_url = "/static/image/upx1.png"
    elif argument>1:
-    icon_url = "icon2"
+    icon_url = "/static/image/upx2.png"
    elif argument<-1:
-    icon_url = "icon3"
+    icon_url = "/static/image/dwx2.png"
    elif  argument>-1 and argument<0:
-    icon_url = "icon4"
+    icon_url = "/static/image/dwx1.png"
    else:
-    print("variation_icon_url")
+    print("ERROR variation_icon_url")
   
    return icon_url
 
@@ -90,13 +90,23 @@ def Getsymbol(id):
   print('cgsymbol : ', cgsymbol)
   return cgsymbol
 
+#get total
 
+def Total():
+   total = 0
+   currency = Currency.query.all()
+   for transaction in currency:
+      price = cg.get_price(ids=transaction.idcurrency, vs_currencies='eur')[transaction.idcurrency]['eur']
+      balance = (transaction.price*transaction.quantity) - (price*transaction.quantity)
+      total += balance
+   return str(round(total, 2))
+  
   
 @app.route('/')
 def index():
-     table()
+     #table()
      currency = Currency.query.all()
-     return render_template('index.html', currency=currency, getprice=Getprice, getname=Getname, geticon=Geticon, iconvariation=Iconvariation, valuevariation=Valuevariation, getsymbol=Getsymbol)
+     return render_template('index.html', currency=currency, getprice=Getprice, getname=Getname, geticon=Geticon, iconvariation=Iconvariation, valuevariation=Valuevariation, getsymbol=Getsymbol, total=Total)
  
 # ...
 
@@ -133,7 +143,7 @@ print('test', cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids='b
           
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
-  coinlist = cg.get_coins_list()
+  #coinlist = cg.get_coins_list()
   #print(coinlist)
   if request.method == 'POST':
         idcurrency = request.form['idcurrency']
@@ -146,7 +156,7 @@ def create():
         db.session.commit()
                     
         return redirect(url_for('index'))
-  return render_template('create.html', **locals())
+  #return render_template('create.html', **locals())
 
 
 # ...

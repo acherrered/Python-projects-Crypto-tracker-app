@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="title">{% block title %} {% endblock %}</h1>
+
+<!--<h1 class="title">{% block title %} {% endblock %}</h1>
     <div class="content">
         {% for currency in currency %}
             <div class="student">
@@ -14,32 +15,40 @@
                 <p>Joined: {{ currency.created_at }}</p>
                 <p>Joined: {{ getprice(currency.idcurrency) }}</p>
                 </div>
-            </div>
+            
         {% endfor %}
-    </div>
-<div class = "transaction">
-<div class="container-fluid">
-  <div class="row align-items-center">
+     </div> -->
 
-{% for currency in currency %}
-    
-    <div class="col-2">
-      <img class="currency-icon float-start" src="/static/image/icon_test.jpg" alt ="">
+<div class="container-fluid text-center">
+<div class="total"> 
+
+<span>{{ total() }}</span>
+
+</div> 
+</div>
+
+<div class = "transaction">
+  {% for currency in currency %}
+<div class="container-fluid Border size">
+  
+  <div class="row align-items-center size">
+    <div class="col-1">
+      <img class="currency-icon float-start" src="{{ geticon(currency.idcurrency) }}" alt ="">
     </div>
 
     
     <div class="col">
-     <span class="symbol">BTC</span>
+     <span class="symbol">{{ getsymbol(currency.idcurrency) }}</span> <span class="currency-name">({{ getname(currency.idcurrency) }})</span>
     </div>
     
     <div class="col-2">
-      <img class="variation-icon float-end" src="/static/image/upx2.png" alt ="">
+      <img class="variation-icon float-end" src="{{ iconvariation(valuevariation(currency.price, getprice(currency.idcurrency))) }}" alt ="">
     </div>
-
-{% endfor %}
     
   </div>
 </div>
-<div>
-  
+  {% endfor %}
+</div>
+
+
 {% endblock %}
