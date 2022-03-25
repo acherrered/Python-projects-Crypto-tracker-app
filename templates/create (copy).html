@@ -2,17 +2,16 @@
 
 {% block content %}
     <h1 style="width: 100%">{% block title %} Add a New Student {% endblock %}</h1>
-
     <form method="post">
 
       <p>
-    <label >id</label>
-    <select id="select-state" name="idcurrency" placeholder="Pick a state...">
-    <option value="">Select a state...</option>
-        {% for obj in coinlist %}
-    <option value="{{obj.id}}">{{obj.name}}</option>
-        {% endfor %}
-    </select>     
+            <label >id</label>
+            <input id="input" list="list" name="idcurrency"/>
+             <datalist id="list">
+               {% for obj in coinlist %}
+             <option value="{{obj.id}}"></option>
+               {% endfor %}
+              </datalist>
       </p>      
         <p>
             <label for="price">Price</label>
