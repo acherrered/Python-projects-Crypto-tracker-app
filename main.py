@@ -2,9 +2,16 @@ import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
+
 from pycoingecko import CoinGeckoAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import datetime as dt
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -54,14 +61,6 @@ class Graph(db.Model):
   #>>> Currency.query.all()
   # print(01coin.id)
 # ...
-def sensor():
-    """ Function for test purposes. """
-    print("Scheduler is alive!")
-
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor,'interval',seconds=1000)
-sched.start()
-
 
 #get % value of variation between two values
 def Valuevariation(first, second):
@@ -92,6 +91,7 @@ def Iconvariation(argument):
   
    return icon_url
 
+#https://stackoverflow.com/questions/4541051/parsing-dictionaries-within-dictionaries
 #get API price by id
 def Getprice(id):
   cgprice =  cg.get_price(ids=id, vs_currencies='eur')[id]['eur']
@@ -129,11 +129,55 @@ def Total():
 #print('test number : ', (float(0.001)))
 
 #def test():
-#  graph = Graph.query.all()
-#  for graph in graph:
-#     ygraph =  print (' Graph data : ', graph.totalvalue, graph.created_at)
-#  return ygraph
-   
+  #graph = Graph.query.all()
+  #for graph in graph:
+     #ygraph =  print (' Graph data : ', graph.totalvalue, graph.created_at)
+  #return ygraph
+
+#https://stackoverflow.com/questions/37133774/how-can-i-select-only-one-column-using-sqlalchemy
+def Getdate():
+    dates = db.session.query(Graph.created_at)
+    all_dates = dates.all()
+  
+    #for date in all_dates:
+      # xx = date #[date.strftime(d,'%d/%m/%Y').date()]
+    xdates = []
+    for row in all_dates:
+       xx = dict(row).values()#
+       yy = (list(xx))
+       #x = [dt.datetime.strptimetime(d,'%m/%d/%Y').date() for d in xx]
+       xdates += yy
+
+    tdate = []
+    for date in xdates:  
+       tt = date.strftime('%d/%m/%Y')
+       print('tt : ', tt, type(tt))
+       tdate.append(tt)
+      
+    return tdate
+
+def Getvalue():
+    values = db.session.query(Graph.totalvalue)
+    all_values = values.all()
+    values = []
+    for row in all_values:
+      xx = dict(row)['totalvalue']
+      values.append(xx)
+    return values
+
+def sensor():
+    """ Function for test purposes. """
+    print("Scheduler is alive!")
+
+    addvalue = Graph(totalvalue=Total())
+    db.session.add(addvalue)
+    db.session.commit()
+
+  
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(sensor,'interval',seconds=2000)
+sched.start()
+  
 
 @app.route('/')
 def index():
@@ -143,6 +187,8 @@ def index():
      #byID = cg.get_coin_by_id("bitcoin")
      #print('byID : ', byID)
      #test()
+     Getdate()
+     Getvalue()
      currency = Currency.query.all()
      return render_template('index.html', currency=currency, getprice=Getprice, getname=Getname, geticon=Geticon, iconvariation=Iconvariation, valuevariation=Valuevariation, getsymbol=Getsymbol, total=Total)
  
@@ -265,6 +311,7 @@ def delete_page():
     print ('url id : ', xcurrency_idcurrency)
     currency = Currency.query.all()
     if request.method == 'POST':
+  #https://stackoverflow.com/questions/36972044/sqlalchemy-select-id-from-table-1-where-name-xyz/36997324
          item = db.session.query(Currency).filter(Currency.idcurrency==xcurrency_idcurrency).first()
          del_currency = Currency.query.get_or_404(item.id)
          db.session.delete(del_currency)
@@ -273,5 +320,25 @@ def delete_page():
     #return redirect(url_for('index'))
   
     return render_template('delete_page.html', currency=currency)
+
+  
+#https://stackoverflow.com/questions/20107414/passing-a-matplotlib-figure-to-html-flask
+@app.route('/graph')
+def graph():
+        img = BytesIO()
+        plt.figure(figsize=(12,6))
+        y =  [-3,-2,-1,0,1] #Getvalue()
+        x =  [0,2,1,3,4] #Getdate()
+        print(type(x), x, type(y),y)
+        plt.plot(x,y, c='green')
+        plt.xlabel('date')
+        plt.ylabel('Euro €')
+        
+        plt.savefig(img, format='png')
+        plt.close()
+        img.seek(0)
+        graph_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+        return render_template('graph.html', graph_url=graph_url)
 
 app.run(host='0.0.0.0', port=8080)
