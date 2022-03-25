@@ -39,6 +39,15 @@
     
     <div class="col">
      <span class="symbol">{{ getsymbol(currency.idcurrency) }}</span> <span class="currency-name">({{ getname(currency.idcurrency) }})</span>
+      <div><a href="{{ url_for('edit', currency_id=currency.id) }}">Edit</a></div>
+
+              <hr>
+        <form method="POST"
+                action="{{ url_for('delete', currency_id=currency.id) }}">
+            <input type="submit" value="Delete Student"
+                onclick="return confirm('Are you sure you want to delete this entry?')">
+        </form>
+      
     </div>
     
     <div class="col-2">
@@ -46,9 +55,12 @@
     </div>
     
   </div>
+
+  <p class="name">
+    <a href="{{ url_for('currency', currency_id=currency.id)}}">{{ currency.idcurrency }}</a>
+            </p>
 </div>
   {% endfor %}
 </div>
-
-
 {% endblock %}
+

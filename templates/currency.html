@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <span class="title">
+        <h1>{% block title %} {{ currency.idcurrency }} {% endblock %}</h1>
+    </span>
+    <div class="content">
+            <div class="student">
+                <p><b>#{{ currency.idcurrency }}</b></p>
+            </div>
+    </div>
+{% endblock %}

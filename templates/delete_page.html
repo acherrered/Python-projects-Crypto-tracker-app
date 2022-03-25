@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 style="width: 100%">
+        {% block title %} Edit {{ currency.idcurrency }}
+                               {{ currency.idcurrency }}'s Details
+        {% endblock %}
+    </h1>
+    <form method="post"
+    action="{{ url_for('delete_page', currency_idcurrency=currency_idcurrency) }}">
+      <p>
+            <label >id</label>
+            <input id="input" list="list" name="idcurrency"/>
+             <datalist id="list">
+               {% for currency in xcurrency %}
+             <option value="{{currency.idcurrency}}"></option>
+               {% endfor %}
+              </datalist>
+<!--
+        
+      </p>      
+        <p>
+            <label for="price">Price</label>
+            <input type="number" name="price" step="16777217"  placeholder="">
+            </input>
+        </p>
+
+        <p>
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity"
+                   placeholder="">
+            </input>
+        </p>
+        <p>
+
+                      <hr>
+    
+                
+            <input type="submit" value="Delete Student"
+                onclick="return confirm('Are you sure you want to delete this entry?')">
+        </form>-->
+      
+            <input type="submit" value="Delete Student"
+                onclick="return confirm('Are you sure you want to delete this entry?')">
+        </p>
+    </form>
+
+
+
+
+
+{% endblock %}

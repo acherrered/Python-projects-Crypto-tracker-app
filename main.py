@@ -16,13 +16,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+#https://github.com/man-c/pycoingecko
+#https://www.coingecko.com/en/api/documentation
 cg = CoinGeckoAPI()
+coinlist = cg.get_coins_list()
 
 class Currency(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     idcurrency = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.Integer)
-    price = db.Column(db.Integer)
+    quantity = db.Column(db.Float)
+    price = db.Column(db.Float)
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
    
@@ -66,32 +70,31 @@ def Iconvariation(argument):
   
    return icon_url
 
-#get real price by id
+#get API price by id
 def Getprice(id):
   cgprice =  cg.get_price(ids=id, vs_currencies='eur')[id]['eur']
   print(cgprice)
   return cgprice
 
-#get name by id
+#get currency name by id
 def Getname(id):
   cgname =  cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids=id)[0]['name']
   print('cgname : ', cgname)
   return cgname
 
-#get icon by id
+#get currency icon by id
 def Geticon(id):
   cgicon =  cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids=id)[0]['image']
   print('cgicon : ', cgicon)
   return cgicon
 
-#get symbol by id
+#get currency symbol by id
 def Getsymbol(id):
   cgsymbol =  cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids=id)[0]['symbol']
   print('cgsymbol : ', cgsymbol)
-  return cgsymbol
+  return cgsymbol.upper()
 
 #get total
-
 def Total():
    total = 0
    currency = Currency.query.all()
@@ -100,15 +103,27 @@ def Total():
       balance = (transaction.price*transaction.quantity) - (price*transaction.quantity)
       total += balance
    return str(round(total, 2))
-  
+
+#print('test number : ', (float(0.001)))
   
 @app.route('/')
 def index():
      #table()
+     float()
+     #print(int(float("0.001")))
      currency = Currency.query.all()
      return render_template('index.html', currency=currency, getprice=Getprice, getname=Getname, geticon=Geticon, iconvariation=Iconvariation, valuevariation=Valuevariation, getsymbol=Getsymbol, total=Total)
  
 # ...
+
+def float():
+   currency = Currency.query.all()
+   for currency in currency:
+      price = print ('print : ', currency.price)
+
+   return price
+
+
 
 def table():  
     total = 0
@@ -134,21 +149,24 @@ def table():
      Getname(transaction.idcurrency)
      Geticon(transaction.idcurrency)
      Getsymbol(transaction.idcurrency)
+   
      return render_template('create.html', **locals())
     #print(f"<id={transaction.id}, username={transaction.idcurrency}>")
 
 
-print('test', cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids='bitcoin'))
+#print('test', cg.get_coins_markets(vs_currency='eur', per_page=1, page=1, ids='bitcoin'))
 
+item = db.session.query(Currency).filter(Currency.idcurrency=="bitcoin").first()
+print ('item : ', item.id)
           
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
-  #coinlist = cg.get_coins_list()
+  coinlist = cg.get_coins_list()
   #print(coinlist)
   if request.method == 'POST':
         idcurrency = request.form['idcurrency']
-        price = int(request.form['price'])
-        quantity = int(request.form['quantity'])
+        price = (request.form['price'])
+        quantity = (request.form['quantity'])
         currency = Currency(idcurrency=idcurrency,
                           price=price,
                           quantity=quantity)
@@ -156,11 +174,62 @@ def create():
         db.session.commit()
                     
         return redirect(url_for('index'))
-  #return render_template('create.html', **locals())
+  return render_template('create.html', **locals(), coinlist=coinlist)
 
 
 # ...
 
+  # ...
 
+@app.route('/<int:currency_id>/')
+def currency(currency_id):
+    currency = Currency.query.get_or_404(currency_id)
+    return render_template('currency.html', currency=currency)
+# ...
+  
+
+  
+@app.route('/<int:currency_id>/edit/', methods=('GET', 'POST'))
+def edit(currency_id):
+    currency = Currency.query.get_or_404(currency_id)
+
+    if request.method == 'POST':
+        idcurrency = request.form['idcurrency']
+        price = (request.form['price'])
+        quantity = (request.form['quantity'])
+
+        currency.idcurrency = idcurrency
+        currency.price = price
+        currency.quantity = quantity
+
+
+        db.session.add(currency)
+        db.session.commit()
+
+        return redirect(url_for('index'))
+
+    return render_template('edit.html', currency=currency, coinlist=coinlist)
+
+
+# ...
+
+@app.post('/<int:currency_id>/delete/')
+def delete(currency_id):
+    currency = Currency.query.get_or_404(currency_id)
+    db.session.delete(currency)
+    db.session.commit()
+    return redirect(url_for('index'))
+
+
+@app.post('/<currency_idcurrency>/delete_page/')
+def delete_page(currency_idcurrency):
+    item = db.session.query(Currency).filter(Currency.idcurrency==currency_idcurrency).first()
+    currency = Currency.query.get_or_404(item.id)
+    db.session.delete(currency)
+    db.session.commit()
+  
+    return redirect(url_for('index'))
+  
+    return render_template('delete_page.html', xcurrency=Currency)
 
 app.run(host='0.0.0.0', port=8080)
