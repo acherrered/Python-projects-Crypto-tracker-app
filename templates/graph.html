@@ -2,10 +2,8 @@
 
 {% block content %}
 
-<section>
-  <h2>Heatmap</h2>
-  <img src="data:image/png;base64, {{ graph_url }}">
-</section>
-
+<div class="graph-container">
+   <img class ="graph-pic" src="data:image/png;base64, {{ graph_url }}">
+<div>
 
 {% endblock %}

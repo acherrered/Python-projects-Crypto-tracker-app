@@ -1,33 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 style="width: 100%">{% block title %} Add a New Student {% endblock %}</h1>
 
-    <form method="post">
+<div class="block-create">
+  
+<div class ="form-currency">
+  
+<form method="post" id="my-form">
+      
 
-      <p>
-    <label >id</label>
-    <select id="select-state" name="idcurrency" placeholder="Pick a state...">
-    <option value="">Select a state...</option>
+<select id="select-state" name="idcurrency"  id="sel2">
+<option><i class="fa-solid fa-magnifying-glass"></i></option>
         {% for obj in coinlist %}
-    <option value="{{obj.id}}">{{obj.name}}</option>
+<option value="{{obj.id}}">{{obj.name}}</option>
         {% endfor %}
-    </select>     
-      </p>      
-        <p>
-            <label for="price">Price</label>
-            <input type="number" name="price" step="16777217" placeholder="">
-            </input>
-        </p>
+</select>     
 
-        <p>
-            <label for="quantity">Quantity</label>
-            <input type="number" name="quantity"
-                   placeholder="">
-            </input>
-        </p>
-        <p>
-            <button type="submit">Submit</button>
-        </p>
-    </form>
+
+ <div class="input-container">
+   <i class="fa-solid fa-coins icon"></i>
+    <input type="number" name="price" step="0.000000001" placeholder="" class="input-currency" class="selectize-input" class="input-field">
+  </div>
+
+  
+ <!-- <input type="number" name="price" step="0.000000001" placeholder="" class="input-currency" class="selectize-input" ></input> -->
+
+<div class="input-container">
+   <i class="fa-solid fa-euro-sign icon"></i>
+<input type="number" name="quantity" placeholder="" class="input-currency" step="0.000000001" class="selectize-input" class="input-field">
+ </div>
+  <button type="submit" class="btn btn-light btn-lg btn-currency .line" id="my-form">Submit</button>
+</form>
+  
+</div>
+  </div>
+
 {% endblock %}

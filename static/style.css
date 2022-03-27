@@ -1,8 +1,22 @@
+html {
+
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 100%;
+
+  
+} * {box-sizing: border-box;}
+
+
 body  {
 
   padding: 0 15px 0 15px;
   background-color: rgb(16, 15, 15);
-  
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 100%;
 }
 
 a {
@@ -17,17 +31,25 @@ color: rgb(31, 195, 108);
   
 }
 
+input {
+
+  background: #100f0f;
+}
+
 
         .title {
             margin: 5px;
         }
 
         .content {
-            margin: 5px;
+           /* margin: 5px;*/
             width: 100%;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
+            min-width: 100%;
+            height: 100%;
+            min-height: 100%;
+                
+           /* flex-direction: row;*/
+            /*flex-wrap: wrap;*/
         }
 
         .student {
@@ -58,7 +80,178 @@ color: rgb(31, 195, 108);
         }
 
 
-   
+.block-create {
+position: relative;
+display: flex;
+allign-items: center;
+width: 100%;
+min-width: 100%;
+/*height: 100%;*/
+/*min-height: 100%;*/
+justify-content: center;
+}
+
+i {
+
+  color: white;
+}
+
+nav a {
+
+margin-left: 0px;
+  
+}
+
+
+
+.selectize-input.items.not-full.has-options::before {
+
+font-size: 20px;
+margin-top:3px;
+margin-left:3px;
+  
+  
+}
+
+/*form{
+
+width: 100%;
+min-width: 100%;
+  
+}*/
+
+.form-currency{
+margin-top: 50px;
+position: absolute;
+width: auto;
+min-width: 100%;
+height: auto;
+/*min-height: 100%;*/
+/*right: 50%;*/
+/*left: 50%;*/
+  
+  }
+
+
+.input-currency{
+height: 50px;
+width: 100%;
+border-radius: 4px;  
+/*margin-top: 40px;*/
+background: #100f0f;
+border: 1px solid #ccc;
+color: #efefef;
+border-left: 0px;
+border-top-left-radius: 0%;
+border-bottom-left-radius: 0%;
+}
+
+.selectize-control{
+
+margin-bottom: -5px;
+
+}
+
+.selectize-input {
+width: 100%;
+height: 50px;
+background: #100f0f;
+color: #efefef;
+  
+}
+
+.selectize-control.single .selectize-input {
+  
+background: #100f0f;   
+  
+}
+
+.btn-currency{
+
+position: relative;
+margin-top: 300px;
+height: 60px;
+width: 250px;
+
+  
+}
+
+.line {
+    width:33%;
+    float:left;
+}
+
+#my-form {
+ text-align: center; 
+  }
+
+.selectize-dropdown-content {
+text-align: left;
+}
+
+
+/*****/
+
+ .selectize-input.items.not-full.has-options:before {
+ content:"\f002";
+ font-family: "Font Awesome 5 Free";
+ line-height: 2;
+ display: block;
+ position: absolute;
+ top: 0;
+ left: 0;
+ padding: 0 4px;
+ font-weight:600;
+ color: #efefe;
+ margin-left: 8px;
+text-align: left;
+ }
+  .selectize-input.items.not-full.has-options {
+ padding-left: 24px;
+ }
+ 
+   .selectize-input.items.not-full.has-options .item:first-child {
+ margin-left: 20px;
+ }
+
+
+/*****/
+
+
+/*************/
+
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.icon {
+padding: 15px 15px 10px 10px;
+background: #100f0;
+color: #efefe;
+min-width: 50px;
+text-align: center;
+border: 1px solid #ccc;
+border-right: 0px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 0px solid #efefe;
+}
+
+
+/****************/
+
+
+
 
 .transaction{
 background: none;
@@ -145,3 +338,34 @@ font-weight: 10;
 color: rgb(239, 239, 239);
 }
 
+.delet-form {
+  position: relative;
+  width: 100%;
+  /*min-width: 100%;*/
+  max-width: 50%;
+
+  
+}
+
+
+/******/
+
+.graph-container{
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  
+}
+
+.graph-pic{
+  
+width: 100%;
+height: auto;
+
+  
+}
+
+
+/*****/
