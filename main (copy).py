@@ -5,8 +5,8 @@ from sqlalchemy.sql import func
 import re
 from pycoingecko import CoinGeckoAPI
 from apscheduler.schedulers.background import BackgroundScheduler
-#import datetime as dt
-#import matplotlib.dates as mdates
+import datetime as dt
+import matplotlib.dates as mdates
 
 import matplotlib
 matplotlib.use('Agg')
@@ -336,7 +336,7 @@ def delete_page():
 
   
 #https://stackoverflow.com/questions/20107414/passing-a-matplotlib-figure-to-html-flask
-@app.route('/graph/')
+@app.route('/graph')
 def graph():
         img = BytesIO()
         #fig = plt.figure()
@@ -398,4 +398,4 @@ def graph():
 
         return render_template('graph.html', graph_url=graph_url)
 
-app.run(host='0.0.0.0', port=8080)
+#app.run(host='0.0.0.0', port=8080)
