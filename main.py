@@ -2,10 +2,11 @@ import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
-
+import re
 from pycoingecko import CoinGeckoAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import datetime as dt
+import matplotlib.dates as mdates
 
 import matplotlib
 matplotlib.use('Agg')
@@ -27,8 +28,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-#https://github.com/man-c/pycoingecko
-#https://www.coingecko.com/en/api/documentation
+
 cg = CoinGeckoAPI()
 coinlist = cg.get_coins_list()
 
@@ -91,6 +91,8 @@ def Iconvariation(argument):
   
    return icon_url
 
+#https://github.com/man-c/pycoingecko
+#https://www.coingecko.com/en/api/documentation
 #https://stackoverflow.com/questions/4541051/parsing-dictionaries-within-dictionaries
 #get API price by id
 def Getprice(id):
@@ -147,10 +149,10 @@ def Getdate():
        yy = (list(xx))
        #x = [dt.datetime.strptimetime(d,'%m/%d/%Y').date() for d in xx]
        xdates += yy
-
+#https://stackoverflow.com/questions/10624937/convert-datetime-object-to-a-string-of-date-only-in-python
     tdate = []
     for date in xdates:  
-       tt = date.strftime('%d/%m/%Y')
+       tt = date.strftime('%d/%m/%y')
        print('tt : ', tt, type(tt))
        tdate.append(tt)
       
@@ -165,6 +167,7 @@ def Getvalue():
       values.append(xx)
     return values
 
+#https://stackoverflow.com/questions/21214270/how-to-schedule-a-function-to-run-every-hour-on-flask
 def sensor():
     """ Function for test purposes. """
     print("Scheduler is alive!")
@@ -246,6 +249,8 @@ def create():
    #Data = request.args.get('xdataid')
    #print('data : ', Data)
    #request.form.get('xdataid')
+   
+   
    if request.method == 'POST':
         idcurrency = request.form['idcurrency']
         price = (request.form['price'])
@@ -308,32 +313,76 @@ def delete(currency_id):
 @app.route('/delete_page/', methods=('GET','POST'))
 def delete_page():
     xcurrency_idcurrency = request.form.get('currency_idcurrency')
-    print ('url id : ', xcurrency_idcurrency)
+    print ('url id : ', xcurrency_idcurrency, type(xcurrency_idcurrency))
+    parsed_currency_idcurrency = re.split('----', str(xcurrency_idcurrency))[0]
+    print ('url xid : ', parsed_currency_idcurrency, type(parsed_currency_idcurrency))
     currency = Currency.query.all()
     if request.method == 'POST':
   #https://stackoverflow.com/questions/36972044/sqlalchemy-select-id-from-table-1-where-name-xyz/36997324
-         item = db.session.query(Currency).filter(Currency.idcurrency==xcurrency_idcurrency).first()
+         item = db.session.query(Currency).filter(Currency.idcurrency==parsed_currency_idcurrency).first()
          del_currency = Currency.query.get_or_404(item.id)
          db.session.delete(del_currency)
          db.session.commit()
   
     #return redirect(url_for('index'))
   
-    return render_template('delete_page.html', currency=currency)
+    return render_template('delete_page.html', currency=currency, getname=Getname, getsymbol=Getsymbol, getprice=Getprice)
 
   
 #https://stackoverflow.com/questions/20107414/passing-a-matplotlib-figure-to-html-flask
 @app.route('/graph')
 def graph():
         img = BytesIO()
-        plt.figure(figsize=(12,6))
-        y =  [-3,-2,-1,0,1] #Getvalue()
-        x =  [0,2,1,3,4] #Getdate()
-        print(type(x), x, type(y),y)
-        plt.plot(x,y, c='green')
+        #fig = plt.figure()
+        
+#https://pythonguides.com/matplotlib-change-background-color/
+        plt.figure(facecolor='black')
+        plt.rcParams.update({'axes.facecolor':'black'})
+        
+      #https://stackoverflow.com/questions/9627686/plotting-dates-on-the-x-axis-with-pythons-matplotlib
+        #plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%y'))
+        #plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+        ax = plt.axes()
+ #https://stackoverflow.com/questions/25689238/show-origin-axis-x-y-in-matplotlib-plot
+        
+        ax.set_aspect('equal')
+        ax.spines['bottom'].set_position('zero')
+
+
+        y =   [-3,-2,-4,0,1]  #Getvalue()
+        x =   ['25/05/22','26/05/22', '27/05/22', '28/05/22', '29/05/22']  #Getdate()
+        #print(type(x), x, type(y),y)
+
+        #y = Getvalue()
+        #x = Getdate()
+        #print(type(x), x, type(y),y)
+
+        
+        ax.spines['bottom'].set_color('yellow')
+        plt.plot(x,y, color='green', linewidth=4.0)
+        #plt.figure(figsize=(12,6))
+        plt.gcf().autofmt_xdate()
+        ax.tick_params(axis='x', colors='white')
+        ax.tick_params(axis='y', colors='white')
+  #https://www.adamsmith.haus/python/answers/how-to-change-the-color-of-the-axes-of-a-plot-in-matplotlib-in-python
+        ax.spines["bottom"].set_color("white")
+        ax.spines["top"].set_color("black")
+        ax.spines["left"].set_color("white")
+  
+
+  
+        #ax=plt.axes()
+        #ax.set_facecolor('pink')
         plt.xlabel('date')
         plt.ylabel('Euro €')
+  
         
+       
+        #plt.spines['bottom'].set_color('black')
+       # plt.spines['top'].set_color('#efefe')
+       # plt.xaxis.label.set_color('black')
+        #plt.tick_params(axis='x', colors='green')
+  
         plt.savefig(img, format='png')
         plt.close()
         img.seek(0)
