@@ -2,35 +2,32 @@
 
 {% block content %}
 
-    <h1 style="width: 100%">
-    </h1>
+
 <section class="block-create">
+  
 <div class="form-currency">
+  
     <form method="post"
-    action="{{ url_for('delete_page', currency_idcurrency=currency_idcurrency) }}">
+    action="{{ url_for('delete_page', currency_idcurrency=currency_idcurrency) }}" id="my-form">
       
-            <label >id</label>
-            <select id="select-currency-delete" name="currency_idcurrency" placeholder="Pick a currency..." onchange="getCurrency(this)">
-    <option value="">Select currency...</option>
+
+<select id="select-currency-delete" name="currency_idcurrency" onchange="getCurrency(this)">
+<option><i class="fa-solid fa-magnifying-glass"></i></option>
         {% for currency in currency %}
-             
-    <option value="{{currency.idcurrency}}----{{currency.price}}" price="{{getprice(currency.idcurrency)}}">{{ getsymbol(currency.idcurrency) }}({{ getname(currency.idcurrency) }})</option>
-
+<option value="{{currency.idcurrency}}----{{currency.price}}">{{ getsymbol(currency.idcurrency) }}({{ getname(currency.idcurrency) }})</option>
         {% endfor %}
-    </select>   
-
-   
- <p>
-<label for="price">Price</label>
-<input class="delete-price" type="text" placeholder="" disabled>
-</input>
- </p>
+</select>   
 
 
+<div class="input-container">
+   <i class="fa-solid fa-coins icon"></i>
+    <input type="text" class="input-currency selectize-input input-field delete-price"  disabled>
+  </div>
       
-<button type="submit" value="Delete Student"onclick="return confirm('Are you sure you want to delete this transaction?')">Delete</button>
+<button type="submit" value="Delete Currency"onclick="return confirm('Are you sure you want to delete this transaction?')" class="btn btn-light btn-lg btn-currency .line" id="my-form">Delete</button>
       
     </form>
  </div>
-</section>section>
+</section>
+
 {% endblock %}

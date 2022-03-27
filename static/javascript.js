@@ -15,10 +15,6 @@ function getCurrency(selectObject) {
 
 
 
-//value = $( "#select-currency_delete" ).val();
-//console.log(value);
-
-
 
 
 

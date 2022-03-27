@@ -278,11 +278,18 @@ def currency(currency_id):
   
 
   
-@app.route('/<int:currency_id>/edit/', methods=('GET', 'POST'))
-def edit(currency_id):
-    currency = Currency.query.get_or_404(currency_id)
-
+@app.route('/edit/', methods=('GET', 'POST'))
+def edit():
+    
+    db_currency = Currency.query.all()
+    idcurrency = request.form.get('idcurrency')
+    item = db.session.query(Currency).filter(Currency.idcurrency==idcurrency).first()
+    print('edit : ',  idcurrency, item)
+   
     if request.method == 'POST':
+        currency = Currency.query.get_or_404(item.id)
+        print('edit : ',  idcurrency)
+      
         idcurrency = request.form['idcurrency']
         price = (request.form['price'])
         quantity = (request.form['quantity'])
@@ -291,23 +298,22 @@ def edit(currency_id):
         currency.price = price
         currency.quantity = quantity
 
-
         db.session.add(currency)
         db.session.commit()
 
         return redirect(url_for('index'))
 
-    return render_template('edit.html', currency=currency, coinlist=coinlist)
+    return render_template('edit.html', db_currency=db_currency, getsymbol=Getsymbol, getname=Getname)
 
 
 # ...
 
-@app.post('/<int:currency_id>/delete/')
-def delete(currency_id):
-    currency = Currency.query.get_or_404(currency_id)
-    db.session.delete(currency)
-    db.session.commit()
-    return redirect(url_for('index'))
+#@app.post('/<int:currency_id>/delete/')
+#def delete(currency_id):
+    #currency = Currency.query.get_or_404(currency_id)
+    #db.session.delete(currency)
+    #db.session.commit()
+    #return redirect(url_for('index'))
 
 
 @app.route('/delete_page/', methods=('GET','POST'))

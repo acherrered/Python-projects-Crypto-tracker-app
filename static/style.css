@@ -31,6 +31,14 @@ color: rgb(31, 195, 108);
   
 }
 
+nav > div > ul > li > a {
+
+margin-left: 15px;
+  
+}
+
+
+
 input {
 
   background: #100f0f;
@@ -204,7 +212,7 @@ text-align: left;
  font-weight:600;
  color: #efefe;
  margin-left: 8px;
-text-align: left;
+/*text-align: left;*/
  }
   .selectize-input.items.not-full.has-options {
  padding-left: 24px;
