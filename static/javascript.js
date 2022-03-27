@@ -14,8 +14,3 @@ function getCurrency(selectObject) {
 }
 
 
-
-
-
-
-

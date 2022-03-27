@@ -1,12 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <span class="title">
-        <h1>{% block title %} {{ currency.idcurrency }} {% endblock %}</h1>
-    </span>
-    <div class="content">
-            <div class="student">
-                <p><b>#{{ currency.idcurrency }}</b></p>
-            </div>
-    </div>
+
+<div class="content">
+<section>
+<nav class="navbar navbar-expand-lg Border">
+<P class="title-page">{{ getname(currency.idcurrency) }}</P>
+<div class="container-fluid size title-container">
+<a class="navbar-brand fw-bold logo-text" href="{{ url_for('index') }}">X</a>
+</div>
+</nav>
+</section>
+
+<div class="container-fluid">      
+<div class="currency-info-container">
+
+<img src="{{geticon(currency.idcurrency)}}" alt ="">
+<br>  
+<p class="currency-info"> <strong>Currency : </strong> {{ getsymbol(currency.idcurrency) }}({{ getname(currency.idcurrency) }}) </p>
+<br>
+<p class="currency-info"><strong>Transaction date : </strong> {{ currency.created_at }}</p>
+<br>
+<p class="currency-info"><strong>Transaction quantity : </strong>{{ currency.quantity }} </p>
+<br>
+<p class="currency-info"><strong>Transaction price : </strong>{{ currency.price }} </p>
+        
+
+</div>
+</div>
+</div>
 {% endblock %}

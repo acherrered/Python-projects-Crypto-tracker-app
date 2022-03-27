@@ -2,14 +2,23 @@
 
 {% block content %}
 
+<section>
+<nav class="navbar navbar-expand-lg Border">
+<P class="title-page">Modifier une transaction</P>
+<div class="container-fluid size title-container">
+<a class="navbar-brand fw-bold logo-text" href="{{ url_for('index') }}">X</a>
+</div>
+</nav>
+</section>
+
 
 <section class="block-create">
   
-<div class="form-currency">
+<div class="form-currency" >
   
-    <form method="post" action="{{ url_for('edit', idcurrency=idcurrency) }}" id="my-form">
+    <form method="post" action="{{ url_for('edit', idcurrency=idcurrency) }}" id="my-form" class="needs-validation">
 
-<select id="select-currency-delete" name="idcurrency" onchange="getCurrency(this)">
+<select class="select-currency-delete" name="idcurrency" onchange="getCurrency(this)" class="form-control" id="validationCustom02" required>
 <option><i class="fa-solid fa-magnifying-glass"></i></option>
         {% for db_currency  in db_currency  %}
 <option value="{{db_currency.idcurrency}}">{{ getsymbol(db_currency.idcurrency) }}({{ getname(db_currency.idcurrency) }})</option>
@@ -17,18 +26,18 @@
 </select>     
 
      
- <div class="input-container">
+ <div class="input-container" >
    <i class="fa-solid fa-coins icon"></i>
-    <input type="number" name="price" step="0.000000001" class="input-currency" class="selectize-input" class="input-field">
+    <input type="number" name="price" step="0.000000001" class="input-currency selectize-input input-field form-control" id="validationCustom02" required>
   </div>
 
 
 <div class="input-container">
    <i class="fa-solid fa-euro-sign icon"></i>
-<input type="number" name="quantity" class="input-currency" step="0.000000001" class="selectize-input" class="input-field">
+<input type="number" name="quantity" class="input-currency" step="0.000000001" class="selectize-input input-field form-control" id="validationCustom02" required>
  </div>
 
-  <button type="submit" class="btn btn-light btn-lg btn-currency .line" id="my-form">Submit</button>
+  <button type="submit" class="btn btn-light btn-lg btn-currency" id="my-form">Submit</button>
       
     </form>
 
