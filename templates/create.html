@@ -2,14 +2,24 @@
 
 {% block content %}
 
+
+<section>
+<nav class="navbar navbar-expand-lg Border">
+<P class="title-page">Ajouter une transaction</P>
+<div class="container-fluid size title-container">
+<a class="navbar-brand fw-bold logo-text" href="{{ url_for('index') }}">X</a>
+</div>
+</nav>
+</section>
+
 <div class="block-create">
   
 <div class ="form-currency">
   
-<form method="post" id="my-form">
+<form method="post" id="my-form" class="needs-validation">
       
 
-<select name="idcurrency"  id="sel2">
+<select name="idcurrency" id="validationCustom01" class="form-control" required>
 <option><i class="fa-solid fa-magnifying-glass"></i></option>
         {% for obj in coinlist %}
 <option value="{{obj.id}}">{{obj.name}}</option>
@@ -19,7 +29,7 @@
 
  <div class="input-container">
    <i class="fa-solid fa-coins icon"></i>
-    <input type="number" name="price" step="0.000000001" placeholder="" class="input-currency" class="selectize-input" class="input-field">
+    <input type="number" name="price" step="0.000000001" class="input-currency selectize-input input-field required-valid form-control" id="validationCustom02" required>
   </div>
 
   
@@ -27,9 +37,9 @@
 
 <div class="input-container">
    <i class="fa-solid fa-euro-sign icon"></i>
-<input type="number" name="quantity" placeholder="" class="input-currency" step="0.000000001" class="selectize-input" class="input-field">
+<input type="number" name="quantity" step="0.000000001" class=" input-currency selectize-input input-field required-valid form-control" id="validationCustom03" required>
  </div>
-  <button type="submit" class="btn btn-light btn-lg btn-currency .line" id="my-form">Submit</button>
+  <button type="submit" class="btn btn-light btn-lg btn-currency" id="my-form">Submit</button>
 </form>
   
 </div>

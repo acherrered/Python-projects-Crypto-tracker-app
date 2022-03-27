@@ -273,7 +273,7 @@ def create():
 @app.route('/<int:currency_id>/')
 def currency(currency_id):
     currency = Currency.query.get_or_404(currency_id)
-    return render_template('currency.html', currency=currency)
+    return render_template('currency.html', currency=currency, getname=Getname, getsymbol=Getsymbol, geticon=Geticon)
 # ...
   
 

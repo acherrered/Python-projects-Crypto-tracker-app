@@ -37,7 +37,39 @@ margin-left: 15px;
   
 }
 
+.title-page{
+position: absolute;
+  color: white;
+margin-bottom: 0px;
+font-size: 20px; 
+font-weight: 600;  
+/*font-family: Roboto-Regular;*/  
+font-family: Roboto-Bold;
+}
 
+.navbar {
+
+justify-content: center;
+align-items: center;  
+}
+
+.currency-info{
+
+color: #f3f3f3;
+
+  
+}
+
+
+.currency-info-container{
+
+margin-top: 100px;
+height: 500px;
+display: flex;
+flex-direction: column;
+/*justify-content: center;*/
+align-items: center; 
+}
 
 input {
 
@@ -212,7 +244,7 @@ text-align: left;
  font-weight:600;
  color: #efefe;
  margin-left: 8px;
-/*text-align: left;*/
+text-align: left;
  }
   .selectize-input.items.not-full.has-options {
  padding-left: 24px;
@@ -298,8 +330,10 @@ padding: 0px;
 .size {
 
 min-height: 50px;
-  
+
 }
+
+
 
 .symbol{
 
