@@ -1,36 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 style="width: 100%">
-        {% block title %} Edit {{ currency.idcurrency }}
-                               {{ currency.idcurrency }}'s Details
-        {% endblock %}
-    </h1>
-    <form method="post">
 
-      <p>
-            <label >id</label>
-            <input id="input" list="list" name="idcurrency"/>
-             <datalist id="list">
-               {% for obj in coinlist %}
-             <option value="{{obj.id}}"></option>
-               {% endfor %}
-              </datalist>
-      </p>      
-        <p>
-            <label for="price">Price</label>
-            <input type="number" name="price" step="16777217"  placeholder="">
-            </input>
-        </p>
 
-        <p>
-            <label for="quantity">Quantity</label>
-            <input type="number" name="quantity"
-                   placeholder="">
-            </input>
-        </p>
-        <p>
-            <button type="submit">Submit</button>
-        </p>
+<section class="block-create">
+  
+<div class="form-currency">
+  
+    <form method="post" action="{{ url_for('edit', idcurrency=idcurrency) }}" id="my-form">
+
+<select id="select-currency-delete" name="idcurrency" onchange="getCurrency(this)">
+<option><i class="fa-solid fa-magnifying-glass"></i></option>
+        {% for db_currency  in db_currency  %}
+<option value="{{db_currency.idcurrency}}">{{ getsymbol(db_currency.idcurrency) }}({{ getname(db_currency.idcurrency) }})</option>
+        {% endfor %}
+</select>     
+
+     
+ <div class="input-container">
+   <i class="fa-solid fa-coins icon"></i>
+    <input type="number" name="price" step="0.000000001" class="input-currency" class="selectize-input" class="input-field">
+  </div>
+
+
+<div class="input-container">
+   <i class="fa-solid fa-euro-sign icon"></i>
+<input type="number" name="quantity" class="input-currency" step="0.000000001" class="selectize-input" class="input-field">
+ </div>
+
+  <button type="submit" class="btn btn-light btn-lg btn-currency .line" id="my-form">Submit</button>
+      
     </form>
+
+   </div>
+</section>
+
 {% endblock %}
