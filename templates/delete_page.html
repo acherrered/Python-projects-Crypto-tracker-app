@@ -16,10 +16,10 @@
 <div class="form-currency">
   
     <form method="post"
-    action="{{ url_for('delete_page', currency_idcurrency=currency_idcurrency) }}" id="my-form">
+    action="{{ url_for('delete_page', currency_idcurrency=currency_idcurrency) }}" id="my-form" class="needs-validation">
       
 
-<select id="select-currency-delete" name="currency_idcurrency" onchange="getCurrency(this)">
+<select id="select-currency-delete" name="currency_idcurrency" onchange="getCurrency(this)" id="validationCustom01" class="form-control" required>
 <option><i class="fa-solid fa-magnifying-glass"></i></option>
         {% for currency in currency %}
 <option value="{{currency.idcurrency}}----{{currency.price}}">{{ getsymbol(currency.idcurrency) }}({{ getname(currency.idcurrency) }})</option>
@@ -28,11 +28,11 @@
 
 
 <div class="input-container">
-   <i class="fa-solid fa-coins icon"></i>
+   <i class="fa-solid fa-euro-sign icon"></i>
     <input type="text" class="input-currency selectize-input input-field delete-price" disabled>
   </div>
       
-<button type="submit" value="Delete Currency"onclick="return confirm('Are you sure you want to delete this transaction?')" class="btn btn-light btn-lg btn-currency .line" id="my-form">Delete</button>
+<button type="submit" value="Delete Currency"onclick="return confirm('Are you sure you want to delete this transaction?')" class="btn btn-light btn-lg btn-currency" id="my-form">Delete</button>
       
     </form>
  </div>

@@ -21,20 +21,20 @@
 <select class="select-currency-delete" name="idcurrency" onchange="getCurrency(this)" class="form-control" id="validationCustom02" required>
 <option><i class="fa-solid fa-magnifying-glass"></i></option>
         {% for db_currency  in db_currency  %}
-<option value="{{db_currency.idcurrency}}">{{ getsymbol(db_currency.idcurrency) }}({{ getname(db_currency.idcurrency) }})</option>
+<option value="{{db_currency.id}}">{{ getsymbol(db_currency.idcurrency) }}({{ getname(db_currency.idcurrency) }})</option>
         {% endfor %}
 </select>     
 
      
  <div class="input-container" >
    <i class="fa-solid fa-coins icon"></i>
-    <input type="number" name="price" step="0.000000001" class="input-currency selectize-input input-field form-control" id="validationCustom02" required>
+    <input type="number" name="quantity" step="0.000000001" class="input-currency selectize-input input-field form-control" id="validationCustom02" required>
   </div>
 
 
 <div class="input-container">
    <i class="fa-solid fa-euro-sign icon"></i>
-<input type="number" name="quantity" class="input-currency" step="0.000000001" class="selectize-input input-field form-control" id="validationCustom02" required>
+<input type="number" name="price" class="input-currency" step="0.000000001" class="selectize-input input-field form-control" id="validationCustom02" required>
  </div>
 
   <button type="submit" class="btn btn-light btn-lg btn-currency" id="my-form">Submit</button>
