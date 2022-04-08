@@ -3,7 +3,7 @@ from main import app
 import re
 import pfunctions
 
-#$ python test_utils.py
+# to run test : $ python unittests.py
 #from replit you have to disable the last line in main.py that to give access to unit tests #app.run(host='0.0.0.0', port=8080)
 
 class main(unittest.TestCase):
