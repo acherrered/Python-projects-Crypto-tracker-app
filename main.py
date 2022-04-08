@@ -1,53 +1,38 @@
 import os
 from flask import Flask, render_template, request, url_for, redirect
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import func
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy.sql import func
 import re
 from pycoingecko import CoinGeckoAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import matplotlib
-
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+import pfunctions
+from db import db
 
-#https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
+from currency import Currency as Currency
+from graph import Graph as Graph
+from currency import Total
+from graph import Getdate
+from graph import Getvalue
+
 app = Flask(__name__, static_url_path='/static')
-
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'database.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
+db.init_app(app)
 cg = CoinGeckoAPI()
 coinlist = cg.get_coins_list()
 
 
-class Currency(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    idcurrency = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.Float)
-    price = db.Column(db.Float)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           server_default=func.now())
+#https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
 
-    def __repr__(self):
-        return f'<Currency {self.idcurrency}>'
-
-
-class Graph(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    totalvalue = db.Column(db.Float)
-    #totaldate = db.Column(db.Float)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           server_default=func.now())
-
-    def __repr__(self):
-        return f'<Graph {self.totalvalue}>'
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SECRET_KEY'] = 'super-secret'
+app.config['SQLALCHEMY_DATABASE_URI'] =\
+        'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 #Creating the Database via the model
@@ -56,129 +41,8 @@ class Graph(db.Model):
 #>>> from main import db, Currency
 #>>> db.create_all()
 #>>> Currency.query.all()
-
-# ...
-
-
-#get % value of variation between two values
-def Valuevariation(first, second):
-    diff = second - first
-    change = 0
-    try:
-        if diff > 0:
-            change = (diff / first) * 100
-        elif diff < 0:
-            diff = first - second
-            change = -((diff / first) * 100)
-    except ZeroDivisionError:
-        return float('inf')
-    return change
-
-
-# ...
-
-
-#Get icon variation by % value (up/upup/dw/dwdw)
-def Iconvariation(argument):
-    if argument >= 0 and argument < 1:
-        icon_url = "/static/image/upx1.png"
-    elif argument > 1:
-        icon_url = "/static/image/upx2.png"
-    elif argument < -1:
-        icon_url = "/static/image/dwx2.png"
-    elif argument > -1 and argument < 0:
-        icon_url = "/static/image/dwx1.png"
-    else:
-        print("ERROR variation_icon_url")
-
-    return icon_url
-
-
-#https://github.com/man-c/pycoingecko
-#https://www.coingecko.com/en/api/documentation
-#https://stackoverflow.com/questions/4541051/parsing-dictionaries-within-dictionaries
-#get API price by id
-def Getprice(id):
-    cgprice = cg.get_price(ids=id, vs_currencies='eur')[id]['eur']
-    print(cgprice)
-    return cgprice
-
-
-#get currency name by id
-def Getname(id):
-    cgname = cg.get_coins_markets(vs_currency='eur',
-                                  per_page=1,
-                                  page=1,
-                                  ids=id)[0]['name']
-    print('cgname : ', cgname)
-    return cgname
-
-
-#get currency icon by id
-def Geticon(id):
-    cgicon = cg.get_coins_markets(vs_currency='eur',
-                                  per_page=1,
-                                  page=1,
-                                  ids=id)[0]['image']
-    print('cgicon : ', cgicon)
-    return cgicon
-
-
-#get currency symbol by id
-def Getsymbol(id):
-    cgsymbol = cg.get_coins_markets(vs_currency='eur',
-                                    per_page=1,
-                                    page=1,
-                                    ids=id)[0]['symbol']
-    print('cgsymbol : ', cgsymbol)
-    return cgsymbol.upper()
-
-
-#get total
-def Total():
-    total = 0
-    currency = Currency.query.all()
-    for transaction in currency:
-        price = cg.get_price(
-            ids=transaction.idcurrency,
-            vs_currencies='eur')[transaction.idcurrency]['eur']
-        balance = (transaction.price *
-                   transaction.quantity) - (price * transaction.quantity)
-        total += balance
-    return str(round(total, 2))
-
-
-#https://stackoverflow.com/questions/37133774/how-can-i-select-only-one-column-using-sqlalchemy
-def Getdate():
-    dates = db.session.query(Graph.created_at)
-    all_dates = dates.all()
-
-    xdates = []
-    for row in all_dates:
-        xx = dict(row).values()  #
-        yy = (list(xx))
-        xdates += yy
-
-    #https://stackoverflow.com/questions/10624937/convert-datetime-object-to-a-string-of-date-only-in-python
-    tdate = []
-    for date in xdates:
-        tt = date.strftime('%d/%m/%y')
-        print('tt : ', tt, type(tt))
-        tdate.append(tt)
-
-    return tdate
-
-
-def Getvalue():
-    values = db.session.query(Graph.totalvalue)
-    all_values = values.all()
-    values = []
-    for row in all_values:
-        xx = dict(row)['totalvalue']
-        values.append(xx)
-    return values
-
-
+      
+  
 #https://stackoverflow.com/questions/21214270/how-to-schedule-a-function-to-run-every-hour-on-flask
 # save the total balance one time per day 24h
 def sensor():
@@ -189,11 +53,9 @@ def sensor():
     db.session.add(addvalue)
     db.session.commit()
 
-
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sensor, 'interval', hours=24)
+sched.add_job(sensor, 'interval', minutes=1440)
 sched.start()
-
 
 @app.route('/')
 def index():
@@ -202,12 +64,12 @@ def index():
     currency = Currency.query.all()
     return render_template('index.html',
                            currency=currency,
-                           getprice=Getprice,
-                           getname=Getname,
-                           geticon=Geticon,
-                           iconvariation=Iconvariation,
-                           valuevariation=Valuevariation,
-                           getsymbol=Getsymbol,
+                           getprice=pfunctions.Getprice,
+                           getname=pfunctions.Getname,
+                           geticon=pfunctions.Geticon,
+                           iconvariation=pfunctions.Iconvariation,
+                           valuevariation=pfunctions.Valuevariation,
+                           getsymbol=pfunctions.Getsymbol,
                            total=Total)
 
 
@@ -242,9 +104,9 @@ def currency(currency_id):
     currency = Currency.query.get_or_404(currency_id)
     return render_template('currency.html',
                            currency=currency,
-                           getname=Getname,
-                           getsymbol=Getsymbol,
-                           geticon=Geticon)
+                           getname=pfunctions.Getname,
+                           getsymbol=pfunctions.Getsymbol,
+                           geticon=pfunctions.Geticon)
 
 
 # ...
@@ -278,8 +140,8 @@ def edit():
 
     return render_template('edit.html',
                            db_currency=db_currency,
-                           getsymbol=Getsymbol,
-                           getname=Getname)
+                           getsymbol=pfunctions.Getsymbol,
+                           getname=pfunctions.Getname)
 
 
 # ...
@@ -306,9 +168,9 @@ def delete_page():
 
     return render_template('delete_page.html',
                            currency=currency,
-                           getname=Getname,
-                           getsymbol=Getsymbol,
-                           getprice=Getprice)
+                           getname=pfunctions.Getname,
+                           getsymbol=pfunctions.Getsymbol,
+                           getprice=pfunctions.Getprice)
 
     
 
